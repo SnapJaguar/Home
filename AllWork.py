@@ -218,7 +218,7 @@ print('Проверяющий 2:')
 print(reviewer_2)
 print()
 
-# Задание 3: сравнение объектов
+#Андрей гей!
 print('Сравнение студентов:')
 print(student_1 > student_2)
 print(student_1 < student_2)

@@ -1,3 +1,6 @@
+
+
+
 class Student:
     def __init__(self, surname, name, gender):
         self.surname = surname

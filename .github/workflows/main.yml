@@ -1,0 +1,44 @@
+name: Python REST API CI
+
+# Описываем события, которые триггерят автоматический запуск тестов
+on:
+  push:
+    branches: [ "main", "master" ] # Запуск при пуше в ветки main или master
+  pull_request:
+    branches: [ "main", "master" ] # Запуск при создании Пул-Реквестов
+
+jobs:
+  test:
+    # Запускаем тесты на чистой виртуальной машине с операционной системой Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Скачиваем текущий код вашего репозитория на виртуальную машину GitHub
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Устанавливаем Python (подставится актуальная стабильная версия 3.11)
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # 3. Настраиваем кэширование, чтобы повторные запуски тестов скачивали библиотеки мгновенно
+    - name: Cache Python dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    # 4. Обновляем pip и устанавливаем зависимости из вашего корневого файла requirements.txt
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # 5. Финальный шаг — автоматический запуск тестов через pytest
+    - name: Run tests with pytest
+      run: |
+        pytest
